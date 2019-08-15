@@ -1,6 +1,6 @@
 {
   "name": "izm",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Generates a new NodeJS project.",
   "main": "./src/index.js",
   "scripts": {
