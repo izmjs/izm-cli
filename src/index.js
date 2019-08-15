@@ -21,7 +21,7 @@ const writeFile$ = promisify(writeFile);
 const npmCmd = platform().startsWith('win') ? 'npm.cmd' : 'npm';
 
 const REPO_DOMAIN = 'github.com';
-const IZM_DEVTOOLS_REPO = 'izmjs/izmjs.git';
+const IZM_DEVTOOLS_REPO = 'izmjs/devtools.git';
 const IZM_REPO = 'izmjs/izmjs.git';
 
 const getRepoUrl = (repo, isGit = true) => {
