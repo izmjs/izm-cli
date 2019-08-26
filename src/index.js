@@ -8,12 +8,10 @@ const { spawn } = require('child_process');
 const { resolve } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
-const { blue, yellow } = require('chalk');
+const { green } = require('chalk');
 const ora = require('ora');
 
 const spinner = ora('Installing NPM dependencies');
-
-const quotes = require('./data');
 
 const exists$ = promisify(exists);
 const writeFile$ = promisify(writeFile);
@@ -34,15 +32,6 @@ const spawn$ = (...args) =>
     cmd.on('close', fnResolve);
     cmd.on('error', fnReject);
   });
-
-exports.randomQuote = () => {
-  const random = Math.floor(Math.random() * quotes.length);
-  const { quote, author } = quotes[random];
-
-  return `${blue(quote)}
-- ${yellow(author)}
-`;
-};
 
 inquirer
   .prompt([
@@ -127,10 +116,6 @@ APP_DESCRIPTION=Generated with izm CLI
     if (npm) {
       spinner.start();
 
-      const interval = setInterval(() => {
-        spinner.text = exports.randomQuote();
-      }, 10000);
-
       try {
         await spawn$(npmCmd, ['install'], {
           cwd: resolve(name),
@@ -140,7 +125,20 @@ APP_DESCRIPTION=Generated with izm CLI
         // Do nothing, proceed
       }
 
-      clearInterval(interval);
       spinner.stop();
     }
+
+    console.log(
+      green(`
+Next steps:
+
+$ cd ${name}${npm ? '' : '\n$ npm install'}
+
+# Start MongoDB Server
+$ mongod --dbpath=db > logs/mongod.log 2>&1 &
+
+# Start the server
+$ npm start
+`),
+    );
   });
