@@ -41,17 +41,17 @@ inquirer
       default: 'starter',
       validate: async name => {
         if (!name) {
-          throw new Error('The name should not be empty');
+          return 'The name should not be empty';
         }
 
-        if (!/[0-9a-zA-Z]+/.test(name)) {
-          throw new Error(`"${name}" is an invalid name. Please do not use special characters`);
+        if (!/^[0-9a-zA-Z]+$/.test(name)) {
+          return `"${name}" is an invalid name. Please do not use special characters`;
         }
 
         const isExists = await exists$(resolve(name));
 
         if (isExists) {
-          throw new Error(`"${name}" already exists. Please choose an other name`);
+          return `"${name}" already exists. Please choose another name`;
         }
 
         return true;
