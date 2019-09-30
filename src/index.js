@@ -26,6 +26,51 @@ const getRepoUrl = (repo, isGit = true) => {
   return isGit === true ? `git@${REPO_DOMAIN}:${repo}` : `https://${REPO_DOMAIN}/${repo}`;
 };
 
+const setEnvVars = ({ name }) => {
+  return inquirer
+    .prompt([
+      {
+        message: 'Username',
+        name: 'username',
+        default: 'username',
+      },
+      {
+        message: 'Password',
+        name: 'password',
+        type: 'password',
+        default: 'Azerty@1234',
+      },
+      {
+        message: 'Email',
+        name: 'email',
+        default: `${name}@example.com`,
+      },
+      {
+        message: 'Firstname',
+        name: 'firstname',
+        validate(value) {
+          if (!value) {
+            return 'The firstname should not be empty';
+          }
+
+          return true;
+        },
+      },
+      {
+        message: 'Lastname',
+        name: 'lastname',
+        validate(value) {
+          if (!value) {
+            return 'The lastname should not be empty';
+          }
+
+          return true;
+        },
+      },
+    ])
+    .then(data => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
+};
+
 const spawn$ = (...args) =>
   new Promise((fnResolve, fnReject) => {
     const cmd = spawn(...args);
@@ -39,7 +84,7 @@ inquirer
       message: 'Choose a name',
       name: 'name',
       default: 'starter',
-      validate: async name => {
+      async validate(name) {
         if (!name) {
           return 'The name should not be empty';
         }
@@ -141,4 +186,19 @@ $ mongod --dbpath=db > logs/mongod.log 2>&1 &
 $ npm start
 `),
     );
+
+    if (devtools) {
+      const { envVars } = await inquirer.prompt([
+        {
+          message: 'Set env variables',
+          name: 'envVars',
+          type: 'confirm',
+          default: false,
+        },
+      ]);
+
+      if (envVars) {
+        await setEnvVars({ name });
+      }
+    }
   });
