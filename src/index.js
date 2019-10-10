@@ -9,9 +9,6 @@ const { resolve } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
-const ora = require('ora');
-
-const spinner = ora('Installing NPM dependencies');
 
 const exists$ = promisify(exists);
 const writeFile$ = promisify(writeFile);
@@ -155,22 +152,31 @@ APP_DESCRIPTION=Generated with izm CLI
         cwd: resolve(name, 'modules'),
         stdio: 'inherit',
       });
+
+      const { envVars } = await inquirer.prompt([
+        {
+          message: 'Set env variables',
+          name: 'envVars',
+          type: 'confirm',
+          default: false,
+        },
+      ]);
+
+      if (envVars) {
+        await setEnvVars({ name });
+      }
     }
 
     // Install npm dependencies
     if (npm) {
-      spinner.start();
-
       try {
         await spawn$(npmCmd, ['install'], {
           cwd: resolve(name),
-          stdio: 'ignore',
+          stdio: 'inherit',
         });
       } catch (e) {
         // Do nothing, proceed
       }
-
-      spinner.stop();
     }
 
     console.log(
@@ -186,19 +192,4 @@ $ mongod --dbpath=db > logs/mongod.log 2>&1 &
 $ npm start
 `),
     );
-
-    if (devtools) {
-      const { envVars } = await inquirer.prompt([
-        {
-          message: 'Set env variables',
-          name: 'envVars',
-          type: 'confirm',
-          default: false,
-        },
-      ]);
-
-      if (envVars) {
-        await setEnvVars({ name });
-      }
-    }
   });
