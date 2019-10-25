@@ -56,23 +56,23 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "inquirer": "^7.0.0",
-    "ora": "^4.0.1"
+    "ora": "^4.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.6",
-    "eslint": "^6.4.0",
+    "coveralls": "^3.0.7",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.3.0",
+    "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
-    "husky": "^3.0.5",
-    "lint-staged": "^9.4.0",
-    "mocha": "^6.2.0",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
-    "release-it": "^12.4.1"
+    "release-it": "^12.4.3"
   },
   "engines": {
     "node": ">= 8.0.0"
