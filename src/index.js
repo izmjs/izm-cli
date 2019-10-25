@@ -9,9 +9,6 @@ const { resolve } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
-const ora = require('ora');
-
-const spinner = ora('Installing NPM dependencies');
 
 const exists$ = promisify(exists);
 const writeFile$ = promisify(writeFile);
@@ -24,6 +21,51 @@ const IZM_REPO = 'izmjs/izmjs.git';
 
 const getRepoUrl = (repo, isGit = true) => {
   return isGit === true ? `git@${REPO_DOMAIN}:${repo}` : `https://${REPO_DOMAIN}/${repo}`;
+};
+
+const setEnvVars = ({ name }) => {
+  return inquirer
+    .prompt([
+      {
+        message: 'Username',
+        name: 'username',
+        default: 'username',
+      },
+      {
+        message: 'Password',
+        name: 'password',
+        type: 'password',
+        default: 'Azerty@1234',
+      },
+      {
+        message: 'Email',
+        name: 'email',
+        default: `${name}@example.com`,
+      },
+      {
+        message: 'Firstname',
+        name: 'firstname',
+        validate(value) {
+          if (!value) {
+            return 'The firstname should not be empty';
+          }
+
+          return true;
+        },
+      },
+      {
+        message: 'Lastname',
+        name: 'lastname',
+        validate(value) {
+          if (!value) {
+            return 'The lastname should not be empty';
+          }
+
+          return true;
+        },
+      },
+    ])
+    .then(data => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
 };
 
 const spawn$ = (...args) =>
@@ -39,19 +81,19 @@ inquirer
       message: 'Choose a name',
       name: 'name',
       default: 'starter',
-      validate: async name => {
+      async validate(name) {
         if (!name) {
-          throw new Error('The name should not be empty');
+          return 'The name should not be empty';
         }
 
-        if (!/[0-9a-zA-Z]+/.test(name)) {
-          throw new Error(`"${name}" is an invalid name. Please do not use special characters`);
+        if (!/^[0-9a-zA-Z]+$/.test(name)) {
+          return `"${name}" is an invalid name. Please do not use special characters`;
         }
 
         const isExists = await exists$(resolve(name));
 
         if (isExists) {
-          throw new Error(`"${name}" already exists. Please choose an other name`);
+          return `"${name}" already exists. Please choose another name`;
         }
 
         return true;
@@ -110,22 +152,31 @@ APP_DESCRIPTION=Generated with izm CLI
         cwd: resolve(name, 'modules'),
         stdio: 'inherit',
       });
+
+      const { envVars } = await inquirer.prompt([
+        {
+          message: 'Set env variables',
+          name: 'envVars',
+          type: 'confirm',
+          default: false,
+        },
+      ]);
+
+      if (envVars) {
+        await setEnvVars({ name });
+      }
     }
 
     // Install npm dependencies
     if (npm) {
-      spinner.start();
-
       try {
         await spawn$(npmCmd, ['install'], {
           cwd: resolve(name),
-          stdio: 'ignore',
+          stdio: 'inherit',
         });
       } catch (e) {
         // Do nothing, proceed
       }
-
-      spinner.stop();
     }
 
     console.log(
