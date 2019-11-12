@@ -139,11 +139,11 @@ inquirer
     await writeFile$(
       resolve(name, '.env', '.development.env'),
       `NODE_ENV=development
-    DEBUG=modules:*,config:*,boilerplate:*
+DEBUG=modules:*,config:*,boilerplate:*
 
-    # general
-    APP_TITLE=${name}
-    APP_DESCRIPTION=Generated with izm CLI
+# general
+APP_TITLE=${name}
+APP_DESCRIPTION=Generated with izm CLI
 `,
     );
 
