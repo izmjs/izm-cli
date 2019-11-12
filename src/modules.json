@@ -1,0 +1,33 @@
+[{
+  "name": "Devtools",
+  "folder": "devtools",
+  "type": "git",
+  "data": {
+    "ssh": "git@github.com:izmjs/devtools.git",
+    "https": "https://github.com/izmjs/devtools.git"
+  }
+}, {
+  "name": "Data Browser",
+  "folder": "data-browser",
+  "type": "git",
+  "data": {
+    "ssh": "git@github.com:izmjs/data-browser.git",
+    "https": "https://github.com/izmjs/data-browser.git"
+  }
+}, {
+  "name": "Chat Module",
+  "folder": "chat-fm",
+  "type": "git",
+  "data": {
+    "ssh": "git@github.com:izmjs/chat-fm.git",
+    "https": "https://github.com/izmjs/chat-fm.git"
+  }
+}, {
+  "name": "Files Manager",
+  "folder": "files-fm",
+  "type": "git",
+  "data": {
+    "ssh": "git@github.com:izmjs/files-fm.git",
+    "https": "https://github.com/izmjs/files-fm.git"
+  }
+}]

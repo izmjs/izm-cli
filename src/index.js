@@ -10,13 +10,14 @@ const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
 
+const MODULES = require('./modules');
+
 const exists$ = promisify(exists);
 const writeFile$ = promisify(writeFile);
 
 const npmCmd = platform().startsWith('win') ? 'npm.cmd' : 'npm';
 
 const REPO_DOMAIN = 'github.com';
-const IZM_DEVTOOLS_REPO = 'izmjs/devtools.git';
 const IZM_REPO = 'izmjs/izmjs.git';
 
 const getRepoUrl = (repo, isGit = true) => {
@@ -100,10 +101,10 @@ inquirer
       },
     },
     {
-      message: 'Add "devtools" functional module?',
-      name: 'devtools',
-      type: 'confirm',
-      default: true,
+      message: 'Choose modules to add',
+      name: 'modules',
+      type: 'checkbox',
+      choices: MODULES.map(one => ({ name: one.name, value: one, checked: true })),
     },
     {
       message: 'Install dependencies?',
@@ -124,7 +125,7 @@ inquirer
       default: 3000,
     },
   ])
-  .then(async ({ name, devtools, npm, ssh, port }) => {
+  .then(async ({ name, modules, npm, ssh, port }) => {
     // Save credentials
     await spawn$('git', ['config', 'credential.helper', 'store']);
 
@@ -138,33 +139,43 @@ inquirer
     await writeFile$(
       resolve(name, '.env', '.development.env'),
       `NODE_ENV=development
-DEBUG=modules:*,config:*,boilerplate:*
+    DEBUG=modules:*,config:*,boilerplate:*
 
-# general
-APP_TITLE=${name}
-APP_DESCRIPTION=Generated with izm CLI
+    # general
+    APP_TITLE=${name}
+    APP_DESCRIPTION=Generated with izm CLI
 `,
     );
 
-    // Clone the devtools functional module
-    if (devtools) {
-      await spawn$('git', ['clone', getRepoUrl(IZM_DEVTOOLS_REPO, ssh), 'devtools'], {
-        cwd: resolve(name, 'modules'),
-        stdio: 'inherit',
-      });
-
-      const { envVars } = await inquirer.prompt([
-        {
-          message: 'Set env variables',
-          name: 'envVars',
-          type: 'confirm',
-          default: false,
-        },
-      ]);
-
-      if (envVars) {
-        await setEnvVars({ name });
+    // Clone functional module
+    for (let i = 0; i < modules.length; i += 1) {
+      const { type, data, folder } = modules[i];
+      switch (type) {
+        case 'git': {
+          const { ssh: sshRepo, https: httpsRepo } = data;
+          // eslint-disable-next-line
+          await spawn$('git', ['clone', ssh && sshRepo ? sshRepo : httpsRepo, folder], {
+            stdio: 'inherit',
+            cwd: resolve(name, 'modules'),
+          });
+          break;
+        }
+        default:
+          break;
       }
+    }
+
+    const { envVars } = await inquirer.prompt([
+      {
+        message: 'Set env variables',
+        name: 'envVars',
+        type: 'confirm',
+        default: false,
+      },
+    ]);
+
+    if (envVars) {
+      await setEnvVars({ name });
     }
 
     // Install npm dependencies
@@ -181,15 +192,15 @@ APP_DESCRIPTION=Generated with izm CLI
 
     console.log(
       green(`
-Next steps:
+    Next steps:
 
-$ cd ${name}${npm ? '' : '\n$ npm install'}
+    $ cd ${name}${npm ? '' : '\n$ npm install'}
 
-# Start MongoDB Server
-$ mongod --dbpath=db > logs/mongod.log 2>&1 &
+    # Start MongoDB Server
+    $ mongod --dbpath=db > logs/mongod.log 2>&1 &
 
-# Start the server
-$ npm start
+    # Start the server
+    $ npm start
 `),
     );
   });
