@@ -139,7 +139,7 @@ inquirer
     await writeFile$(
       resolve(name, '.env', '.development.env'),
       `NODE_ENV=development
-DEBUG=modules:*,config:*,boilerplate:*
+DEBUG=modules:*,config:*,boilerplate:*,app:*
 
 # general
 APP_TITLE=${name}
