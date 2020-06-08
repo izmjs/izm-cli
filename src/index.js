@@ -9,6 +9,7 @@ const { resolve } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
+const path = require('path');
 
 const MODULES = require('./modules');
 
@@ -66,7 +67,7 @@ const setEnvVars = ({ name }) => {
         },
       },
     ])
-    .then(data => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
+    .then((data) => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
 };
 
 const spawn$ = (...args) =>
@@ -75,6 +76,29 @@ const spawn$ = (...args) =>
     cmd.on('close', fnResolve);
     cmd.on('error', fnReject);
   });
+
+// takes in a target dir and copies the contents of /assets into it
+// be careful this returns a promise
+const copyDir = (target) => {
+  if (platform().startsWith('win')) {
+    spawn$(
+      'xcopy',
+      [
+        path.join(__dirname, '../assets'),
+        path.join(__dirname, `../${target}`),
+        '/S',
+        '/q' /* /q flag for quiet mode on windows */,
+      ],
+      {
+        stdio: 'inherit',
+      },
+    );
+  } else {
+    spawn$('cp', ['-r', './assets/public', target], {
+      stdio: 'inherit',
+    });
+  }
+};
 
 inquirer
   .prompt([
@@ -104,7 +128,7 @@ inquirer
       message: 'Choose modules to add',
       name: 'modules',
       type: 'checkbox',
-      choices: MODULES.map(one => ({ name: one.name, value: one, checked: true })),
+      choices: MODULES.map((one) => ({ name: one.name, value: one, checked: true })),
     },
     {
       message: 'Install dependencies?',
@@ -133,6 +157,9 @@ inquirer
     await spawn$('git', ['clone', getRepoUrl(IZM_REPO, ssh), name], {
       stdio: 'inherit',
     });
+
+    // Creates the public starter files
+    await copyDir(name);
 
     // Create env files
     await writeFile$(resolve(name, '.env', '.common.env'), `PORT=${port}`);

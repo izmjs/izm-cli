@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #0c0c0cf2;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  background-color: rgb(40, 42, 54);
+  padding: 2px 5px;
+  border-radius: 3px;
+  color: #f2f2f2;
+}
+
+p {
+  line-height: 2;
+}
+
+.app {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.app_logo-container {
+  margin-bottom: 40px;
+}
+
+.app__logo {
+  -webkit-animation: spin 4s linear infinite;
+  -moz-animation: spin 4s linear infinite;
+  animation: spin 4s linear infinite;
+}
+
+.btn {
+  background-color: rgb(161, 105, 65);
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: #f2f2f2;
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  transition: background-color 300ms ease;
+}
+
+.btn:hover {
+  background-color: rgb(206, 155, 118);
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
