@@ -77,6 +77,29 @@ const spawn$ = (...args) =>
     cmd.on('error', fnReject);
   });
 
+// takes in a target dir and copies the contents of /assets into it
+// be careful this returns a promise
+const copyDir = (target) => {
+  if (platform().startsWith('win')) {
+    spawn$(
+      'xcopy',
+      [
+        path.join(__dirname, '../assets'),
+        path.join(__dirname, `../${target}`),
+        '/S',
+        '/q' /* /q flag for quiet mode on windows */,
+      ],
+      {
+        stdio: 'inherit',
+      },
+    );
+  } else {
+    spawn$('cp', ['-r', './assets/public', target], {
+      stdio: 'inherit',
+    });
+  }
+};
+
 inquirer
   .prompt([
     {
@@ -136,15 +159,7 @@ inquirer
     });
 
     // Creates the public starter files
-    if (platform().startsWith('win')) {
-      await spawn$('xcopy', [path.join(__dirname, '../assets'), path.join(__dirname, `../${name}`), '/S'], {
-        stdio: 'inherit',
-      });
-    } else {
-      await spawn$('cp', ['-r', './assets/public', name], {
-        stdio: 'inherit',
-      });
-    }
+    await copyDir(name);
 
     // Create env files
     await writeFile$(resolve(name, '.env', '.common.env'), `PORT=${port}`);
