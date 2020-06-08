@@ -9,6 +9,7 @@ const { resolve } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
+const path = require('path');
 
 const MODULES = require('./modules');
 
@@ -135,9 +136,15 @@ inquirer
     });
 
     // Creates the public starter files
-    await spawn$('cp', ['-r', './assets/public', name], {
-      stdio: 'inherit',
-    });
+    if (platform().startsWith('win')) {
+      await spawn$('xcopy', [path.join(__dirname, '../assets'), path.join(__dirname, `../${name}`), '/S'], {
+        stdio: 'inherit',
+      });
+    } else {
+      await spawn$('cp', ['-r', './assets/public', name], {
+        stdio: 'inherit',
+      });
+    }
 
     // Create env files
     await writeFile$(resolve(name, '.env', '.common.env'), `PORT=${port}`);
