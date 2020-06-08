@@ -66,7 +66,7 @@ const setEnvVars = ({ name }) => {
         },
       },
     ])
-    .then(data => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
+    .then((data) => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
 };
 
 const spawn$ = (...args) =>
@@ -104,7 +104,7 @@ inquirer
       message: 'Choose modules to add',
       name: 'modules',
       type: 'checkbox',
-      choices: MODULES.map(one => ({ name: one.name, value: one, checked: true })),
+      choices: MODULES.map((one) => ({ name: one.name, value: one, checked: true })),
     },
     {
       message: 'Install dependencies?',
@@ -131,6 +131,11 @@ inquirer
 
     // Clone the boilerplate
     await spawn$('git', ['clone', getRepoUrl(IZM_REPO, ssh), name], {
+      stdio: 'inherit',
+    });
+
+    // Creates the public starter files
+    await spawn$('cp', ['-r', './assets/public', name], {
       stdio: 'inherit',
     });
 
