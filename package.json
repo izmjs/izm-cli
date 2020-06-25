@@ -54,24 +54,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^4.0.0",
-    "inquirer": "^7.1.0"
+    "chalk": "^4.1.0",
+    "inquirer": "^7.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/cli": "^9.0.1",
+    "@commitlint/config-conventional": "^9.0.1",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.21.1",
+    "eslint-plugin-import": "^2.21.2",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.9",
-    "mocha": "^7.2.0",
+    "lint-staged": "^10.2.11",
+    "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
-    "release-it": "^13.6.2"
+    "release-it": "^13.6.3"
   },
   "engines": {
     "node": ">= 8.0.0"
