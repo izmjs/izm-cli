@@ -162,10 +162,10 @@ inquirer
     await copyDir(name);
 
     // Create env files
-    await writeFile$(resolve(name, '.env', '.common.env'), `PORT=${port}`);
+    await writeFile$(resolve(name, '.env', '.common.env'), 'NODE_ENV=development');
     await writeFile$(
       resolve(name, '.env', '.development.env'),
-      `NODE_ENV=development
+      `PORT=${port}
 DEBUG=modules:*,config:*,boilerplate:*,app:*
 
 # general
