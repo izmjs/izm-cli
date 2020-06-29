@@ -46,6 +46,7 @@ const setEnvVars = ({ name }) => {
       {
         message: 'Firstname',
         name: 'firstname',
+        default: 'Firstname',
         validate(value) {
           if (!value) {
             return 'The firstname should not be empty';
@@ -57,6 +58,7 @@ const setEnvVars = ({ name }) => {
       {
         message: 'Lastname',
         name: 'lastname',
+        default: 'Lastname',
         validate(value) {
           if (!value) {
             return 'The lastname should not be empty';
@@ -127,7 +129,7 @@ inquirer
       message: 'Choose modules to add',
       name: 'modules',
       type: 'checkbox',
-      choices: MODULES.map((one) => ({ name: one.name, value: one, checked: true })),
+      choices: MODULES.map((one) => ({ name: one.name, value: one, checked: one.selected })),
     },
     {
       message: 'Install dependencies?',

@@ -1,6 +1,6 @@
 {
   "name": "izm",
-  "version": "0.2.5",
+  "version": "0.2.9",
   "description": "Generates a new NodeJS project.",
   "main": "./src/index.js",
   "scripts": {
@@ -84,7 +84,8 @@
   },
   "files": [
     "src/**/*.js",
-    "src/**/*.json"
+    "src/**/*.json",
+    "assets"
   ],
   "lint-staged": {
     "*.js": [
