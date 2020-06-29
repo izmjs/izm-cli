@@ -5,11 +5,10 @@
 const inquirer = require('inquirer');
 const { exists, writeFile } = require('fs');
 const { spawn } = require('child_process');
-const { resolve } = require('path');
+const { join } = require('path');
 const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
-const path = require('path');
 
 const MODULES = require('./modules');
 
@@ -67,7 +66,7 @@ const setEnvVars = ({ name }) => {
         },
       },
     ])
-    .then((data) => writeFile$(resolve(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
+    .then((data) => writeFile$(join(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
 };
 
 const spawn$ = (...args) =>
@@ -84,8 +83,8 @@ const copyDir = (target) => {
     spawn$(
       'xcopy',
       [
-        path.join(__dirname, '../assets'),
-        path.join(__dirname, `../${target}`),
+        join(__dirname, '../assets'),
+        join(__dirname, `../${target}`),
         '/S',
         '/q' /* /q flag for quiet mode on windows */,
       ],
@@ -94,7 +93,7 @@ const copyDir = (target) => {
       },
     );
   } else {
-    spawn$('cp', ['-r', './assets/public', target], {
+    spawn$('cp', ['-r', join(__dirname, '../assets/public'), target], {
       stdio: 'inherit',
     });
   }
@@ -115,7 +114,7 @@ inquirer
           return `"${name}" is an invalid name. Please do not use special characters`;
         }
 
-        const isExists = await exists$(resolve(name));
+        const isExists = await exists$(join(name));
 
         if (isExists) {
           return `"${name}" already exists. Please choose another name`;
@@ -162,16 +161,19 @@ inquirer
     await copyDir(name);
 
     // Create env files
-    await writeFile$(resolve(name, '.env', '.common.env'), 'NODE_ENV=development');
+    await writeFile$(join(name, '.env', '.common.env'), 'NODE_ENV=development');
     await writeFile$(
-      resolve(name, '.env', '.development.env'),
+      join(name, '.env', '.development.env'),
       `PORT=${port}
 DEBUG=modules:*,config:*,boilerplate:*,app:*
 
 # general
 APP_TITLE=${name}
 APP_DESCRIPTION=Generated with izm CLI
-`,
+
+# devtools
+DEVTOOLS_MODULE_FILES_URL=https://github.com/izmjs/izmjs/blob/develop
+DEVTOOLS_MODULE_FILES_TYPE=github`,
     );
 
     // Clone functional module
@@ -183,7 +185,7 @@ APP_DESCRIPTION=Generated with izm CLI
           // eslint-disable-next-line
           await spawn$('git', ['clone', ssh && sshRepo ? sshRepo : httpsRepo, folder], {
             stdio: 'inherit',
-            cwd: resolve(name, 'modules'),
+            cwd: join(name, 'modules'),
           });
           break;
         }
@@ -209,7 +211,7 @@ APP_DESCRIPTION=Generated with izm CLI
     if (npm) {
       try {
         await spawn$(npmCmd, ['install'], {
-          cwd: resolve(name),
+          cwd: join(name),
           stdio: 'inherit',
         });
       } catch (e) {
