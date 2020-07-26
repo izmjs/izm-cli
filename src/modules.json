@@ -34,4 +34,13 @@
     "ssh": "git@github.com:izmjs/files-fm.git",
     "https": "https://github.com/izmjs/files-fm.git"
   }
+}, {
+  "selected": false,
+  "name": "Applications",
+  "folder": "apps-fm",
+  "type": "git",
+  "data": {
+    "ssh": "git@github.com:izmjs/apps-fm.git",
+    "https": "https://github.com/izmjs/apps-fm.git"
+  }
 }]

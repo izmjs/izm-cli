@@ -167,15 +167,12 @@ inquirer
     await writeFile$(
       join(name, '.env', '.development.env'),
       `PORT=${port}
-DEBUG=modules:*,config:*,boilerplate:*,app:*
+DEBUG=app:*,modules:*,vendor:*
 
 # general
 APP_TITLE=${name}
 APP_DESCRIPTION=Generated with izm CLI
-
-# devtools
-DEVTOOLS_MODULE_FILES_URL=https://github.com/izmjs/izmjs/blob/develop
-DEVTOOLS_MODULE_FILES_TYPE=github`,
+`,
     );
 
     // Clone functional module
