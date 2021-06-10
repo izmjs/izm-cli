@@ -10,7 +10,7 @@ const { platform } = require('os');
 const { promisify } = require('util');
 const { green } = require('chalk');
 
-const MODULES = require('./modules');
+const MODULES = require('./modules.json');
 
 const exists$ = promisify(exists);
 const writeFile$ = promisify(writeFile);
@@ -20,12 +20,11 @@ const npmCmd = platform().startsWith('win') ? 'npm.cmd' : 'npm';
 const REPO_DOMAIN = 'github.com';
 const IZM_REPO = 'izmjs/izmjs.git';
 
-const getRepoUrl = (repo, isGit = true) => {
-  return isGit === true ? `git@${REPO_DOMAIN}:${repo}` : `https://${REPO_DOMAIN}/${repo}`;
-};
+const getRepoUrl = (repo, isGit = true) =>
+  isGit === true ? `git@${REPO_DOMAIN}:${repo}` : `https://${REPO_DOMAIN}/${repo}`;
 
-const setEnvVars = ({ name }) => {
-  return inquirer
+const setEnvVars = ({ name }) =>
+  inquirer
     .prompt([
       {
         message: 'Username',
@@ -69,7 +68,6 @@ const setEnvVars = ({ name }) => {
       },
     ])
     .then((data) => writeFile$(join(name, '.env', '.defaults.json'), JSON.stringify(data, null, '  ')));
-};
 
 const spawn$ = (...args) =>
   new Promise((fnResolve, fnReject) => {
@@ -112,7 +110,7 @@ inquirer
           return 'The name should not be empty';
         }
 
-        if (!/^[0-9a-zA-Z]+$/.test(name)) {
+        if (!/^(?:@[a-z0-9-*~][a-z0-9-*._~]*)?[a-z0-9-~][a-z0-9-._~]*$/.test(name)) {
           return `"${name}" is an invalid name. Please do not use special characters`;
         }
 

@@ -15,7 +15,8 @@
     "release:patch": "release-it patch",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "prepare": "husky install"
   },
   "repository": {
     "url": "https://github.com/midrissi/izm.git",
@@ -54,33 +55,27 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^4.1.0",
-    "inquirer": "^7.3.3"
+    "chalk": "^4.1.1",
+    "inquirer": "^8.1.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "chai": "^4.2.0",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "chai": "^4.3.4",
     "coveralls": "^3.1.0",
-    "eslint": "^7.11.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-config-prettier": "^6.13.0",
-    "eslint-plugin-import": "^2.22.1",
-    "husky": "^4.3.0",
-    "lint-staged": "^10.4.2",
-    "mocha": "^8.2.0",
+    "eslint": "^7.28.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "mocha": "^9.0.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.1.2",
-    "release-it": "^14.2.0"
+    "prettier": "^2.3.1",
+    "release-it": "^14.8.0"
   },
   "engines": {
     "node": ">= 8.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "files": [
     "src/**/*.js",
